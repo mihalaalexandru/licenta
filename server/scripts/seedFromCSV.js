@@ -50,12 +50,12 @@ const processExcel = (fileName, type) => {
 async function seed() {
   console.log('--- Incepem citirea fisierelor Excel (.xlsx) ---');
 
-  const stocks = processExcel('Book1.xlsx', 'STOCK');
-  const cryptos = processExcel('Book2.xlsx', 'CRYPTO');
+  const stocks = processExcel('../data/stocks.xlsx', 'STOCK');
+  const cryptos = processExcel('../data/crypto.xlsx', 'CRYPTO');
   const allAssets = [...stocks, ...cryptos];
 
   if (allAssets.length === 0) {
-    console.log('Nu am gasit date. Asigura-te ca Book1.xlsx si Book2.xlsx sunt in folderul server.');
+    console.log('Nu am gasit date. Asigura-te ca stocks.xlsx si crypto.xlsx sunt in folderul data.');
     return;
   }
 

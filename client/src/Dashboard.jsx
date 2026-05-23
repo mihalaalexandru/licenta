@@ -1737,7 +1737,6 @@ function Dashboard() {
                           <td>{new Date(tx.date).toLocaleString()}</td>
                           <td>
                             <div className="table-asset-name" style={{ color: 'var(--text-main)' }}>
-                              <span className="table-icon">{tx?.asset?.symbol ? tx.asset.symbol.substring(0, 2) : '??'}</span>
                               {tx.asset.name} <span className="badge">{tx.asset.symbol}</span>
                             </div>
                           </td>

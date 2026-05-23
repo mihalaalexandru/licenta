@@ -127,7 +127,6 @@ router.get('/google/callback',
       name: req.user.name,
       email: req.user.email,
       currency: req.user.currency || 'USD',
-      profilePicture: req.user.profilePicture,
       balance: req.user.balance,
       isTwoFactorEnabled: req.user.isTwoFactorEnabled
     };

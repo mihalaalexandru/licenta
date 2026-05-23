@@ -100,25 +100,20 @@ const cancelRegistration = async (req, res) => {
   try {
     const { token } = req.params;
     
-    // Decodăm token-ul pentru a afla ce ID de utilizator vrem să ștergem
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     if (decoded.action !== 'cancel_registration') {
       return res.status(400).json({ message: 'Invalid token action' });
     }
 
-    // Încercăm să ștergem direct contul
     try {
       await prisma.user.delete({ where: { id: decoded.userId } });
       return res.status(200).json({ message: 'Account successfully deleted. You will no longer receive emails from us.' });
     } catch (dbError) {
-      // Codul P2025 în Prisma înseamnă "Record to delete does not exist"
       if (dbError.code === 'P2025') {
-        // Dacă nu mai există, înseamnă că a fost deja șters (ex: de la requestul anterior).
-        // Returnăm 200 OK, ca frontend-ul să afișeze mesajul de succes, nu eroare.
+        
         return res.status(200).json({ message: 'Account was already deleted.' });
       }
-      // Dacă e altă eroare de bază de date, o aruncăm mai departe
       throw dbError;
     }
 

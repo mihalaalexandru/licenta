@@ -8,6 +8,7 @@ import Register from './Register';
 import { Toaster } from 'sonner';
 import AuthSuccess from './AuthSuccess';
 import { ThemeProvider } from './ThemeContext';
+import CancelAccount from './CancelAccount';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/auth-success" element={<AuthSuccess />} />
+          <Route path="/cancel-account/:token" element={<CancelAccount />} />
         </Routes>
         <Toaster position="top-right" theme="dark" richColors />
       </Router>

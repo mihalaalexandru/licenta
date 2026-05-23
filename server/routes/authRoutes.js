@@ -18,7 +18,9 @@ const {
   enable2FA,
   disable2FA,
   verify2FALogin,
-  loginWithTrustedDevice
+  loginWithTrustedDevice,
+  cancelRegistration
+  
 } = require('../controllers/authController');
 const { requireAuth } = require('../middleware/auth');
 
@@ -81,6 +83,7 @@ router.post('/login/trusted', loginWithTrustedDevice);
 router.put('/update-profile', requireAuth, updateUser);
 router.put('/change-password', requireAuth, changePassword);
 router.delete('/delete-account/:id', requireAuth, deleteAccount);
+router.delete('/cancel-registration/:token', cancelRegistration);
 
 router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'], session: false })

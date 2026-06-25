@@ -75,25 +75,54 @@ const startPriceTracker = () => {
 
         if (shouldExecute) {
           try {
-            const token = jwt.sign({ userId: order.userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
-            const config = { headers: { Authorization: `Bearer ${token}` } };
-
             if (order.type === 'BUY') {
+              const token = jwt.sign({ userId: order.userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
+              const config = { headers: { Authorization: `Bearer ${token}` } };
+              
               await axios.post('http://localhost:3000/api/trade/buy', { 
                 userId: order.userId, 
                 assetId: order.assetId, 
                 quantity: order.quantity 
               }, config);
             } else {
-              await axios.post('http://localhost:3000/api/trade/sell', { 
-                userId: order.userId, 
-                assetId: order.assetId, 
-                quantity: order.quantity 
-              }, config);
+              // Pentru SELL, execută la prețul țintă (limit price)
+              const user = await prisma.user.findUnique({ where: { id: order.userId } });
+              const portfolioItem = await prisma.portfolio.findUnique({
+                where: { userId_assetId: { userId: order.userId, assetId: order.assetId } }
+              });
+
+              if (user && portfolioItem && portfolioItem.quantity >= order.quantity) {
+                const totalRevenue = order.targetPrice * order.quantity;
+                const newBalance = user.balance + totalRevenue;
+
+                await prisma.$transaction([
+                  prisma.user.update({
+                    where: { id: user.id },
+                    data: { balance: newBalance }
+                  }),
+                  prisma.portfolio.update({
+                    where: { id: portfolioItem.id },
+                    data: { quantity: { decrement: order.quantity } }
+                  }),
+                  prisma.transaction.create({
+                    data: {
+                      userId: user.id,
+                      assetId: order.assetId,
+                      type: 'SELL',
+                      quantity: order.quantity,
+                      priceAtPurchase: order.targetPrice
+                    }
+                  }),
+                  prisma.balanceHistory.create({
+                    data: { userId: user.id, balance: newBalance }
+                  })
+                ]);
+              }
             }
             
             await prisma.autoOrder.update({ where: { id: order.id }, data: { status: 'EXECUTED' } });
 
+            const executionPrice = order.type === 'SELL' ? order.targetPrice : currentPrice;
             const htmlOrder = `
               <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #030712; color: #ffffff; padding: 40px; border-radius: 24px; border: 1px solid #1f2937;">
                 <div style="text-align: center; margin-bottom: 30px;">
@@ -109,7 +138,7 @@ const startPriceTracker = () => {
                   </div>
                   <div style="display: flex; justify-content: space-between;">
                     <span style="color: #94a3b8;">Execution Price:</span>
-                    <span style="font-weight: 700; color: #3b82f6;">$${currentPrice.toLocaleString()}</span>
+                    <span style="font-weight: 700; color: #3b82f6;">$${executionPrice.toLocaleString()}</span>
                   </div>
                 </div>
                 <div style="text-align: center; margin-top: 30px;">

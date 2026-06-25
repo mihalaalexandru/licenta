@@ -2730,7 +2730,7 @@ function Dashboard() {
                           className="bg-[#181C25] border-slate-700 text-white pr-12 h-11 text-right focus-visible:ring-1 focus-visible:ring-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           placeholder={selectedChartAsset.currentPrice.toFixed(2)}
                         />
-                        <span className="absolute right-3 top-3 text-xs text-slate-400 font-semibold">USD</span>
+                        <span className="absolute right-3 top-3 text-xs text-slate-400 font-semibold">{user?.currency === 'RON' ? 'RON' : CURRENCY_SYMBOLS[user?.currency || 'USD']}</span>
                       </div>
                     </div>
                   )}
@@ -3053,7 +3053,7 @@ function Dashboard() {
                         placeholder="0.00"
                         className="sell-input"
                       />
-                      <div className="sell-input-unit">USD</div>
+                      <div className="sell-input-unit">{user?.currency === 'RON' ? 'RON' : CURRENCY_SYMBOLS[user?.currency || 'USD']}</div>
                     </div>
                     <div className="sell-input-hint">Order will execute when price reaches this target</div>
                   </motion.div>
@@ -3150,7 +3150,7 @@ function Dashboard() {
                     required
                     className="w-full bg-[#181C25] border-slate-700 text-white pr-12 h-11 text-right focus-visible:ring-1 focus-visible:ring-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <span className="absolute right-3 top-3 text-xs text-slate-400 font-semibold">USD</span>
+                  <span className="absolute right-3 top-3 text-xs text-slate-400 font-semibold">{user?.currency === 'RON' ? 'RON' : CURRENCY_SYMBOLS[user?.currency || 'USD']}</span>
                 </div>
               </div>
 

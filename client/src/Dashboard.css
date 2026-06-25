@@ -59,25 +59,22 @@ html, body, #root {
   flex-direction: column;
 }
 
-.menu-item {
-  color: #94a3b8;
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
+.sidebar-menu .menu-item {
+  /* Asigură-te că item-ul de bază are tranzitie, dacă nu o are deja */
+  transition: all 0.2s ease;
 }
 
-.menu-item.active {
-  color: #f8fafc;
-  background-color: var(--bg-hover);
-  border-right: 3px solid #3b82f6;
+.sidebar-menu .menu-item:hover {
+  background-color: rgba(59, 130, 246, 0.08); 
+  color: #3b82f6; 
+  transform: translateX(10px);
 }
 
-.menu-item:hover {
-  background-color: var(--bg-hover);
-  color: #f8fafc;
+.sidebar-menu .menu-item.active {
+  background-color: rgba(59, 130, 246, 0.15); 
+  color: #3b82f6;
+  font-weight: 600; 
+  border-right: 3px solid #3b82f6; 
 }
 
 .stat-card, .modal-card, .news-section > div > div, .auth-form {
